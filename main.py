@@ -24,7 +24,7 @@ class Example(QWidget):
 
         self.setToolTip('This is a <b>QWidget</b> widget')
         self.setGeometry(300, 300, 300, 200)
-        self.setWindowTitle('Tooltips')
+        self.setWindowTitle('PoolClub emulate hardware')
         self.center()
 
         layout = QtWidgets.QGridLayout()
