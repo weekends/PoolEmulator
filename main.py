@@ -39,15 +39,17 @@ class Example(QWidget):
 
         self.setLayout(layout)
 
-#        btn = QPushButton('Button', self)
+        btn = QPushButton('Quit', self)
 #        btn.setToolTip('This is a <b>QPushButton</b> widget')
-#        btn.resize(btn.sizeHint())
+        btn.resize(btn.sizeHint())
 #        btn.move(50, 50)
-#        btn.clicked.connect(QtCore.QCoreApplication.instance().quit)
+        btn.clicked.connect(QtCore.QCoreApplication.instance().quit)
+        layout.addWidget(btn, 4, 0, 1, 0)
+
         self.show()
         self._receive_signal.connect(self.ShowData)
 
-        self.dev = SerialPort.SerialPort('/tmp/serial_port_0')
+        self.dev = SerialPort.SerialPort('/tmp/dev/serial_port_0')
         self.dev.registerReceivedCallback(self.ShowData)
 
     def center(self):
@@ -57,18 +59,20 @@ class Example(QWidget):
         self.move(qr.topLeft())
 
     def send_signal(self, num):
-        self._receive_signal.emit(num, "background-color : yellow")
+        self._receive_signal.emit(num, "invert")
 
     def ShowData(self, num, data):
         print('Signsl: ', num, data)
-        self.btns[num][0].setStyleSheet(data)
-#        if (num >= 0 and num <self.max_tables):
-#            if (self.btns[num][1] is False):
-#                self.btns[num][0].setStyleSheet(data)
-#                self.btns[num][1] = True
-#            else:
-#                self.btns[num][0].setStyleSheet("background-color : None")
-#                self.btns[num][1] = False
+        if (data == 'invert'):
+           if (num >= 0 and num <self.max_tables):
+               if (self.btns[num][1] is False):
+                   self.btns[num][0].setStyleSheet("background-color : yellow")
+                   self.btns[num][1] = True
+               else:
+                   self.btns[num][0].setStyleSheet("background-color : None")
+                   self.btns[num][1] = False
+        else:
+            self.btns[num][0].setStyleSheet(data)
 
 
 if __name__ == "__main__":
