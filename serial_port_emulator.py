@@ -37,6 +37,11 @@ def run(num_ports, loopback=False, debug=False):
 
     master_files = {}  # Dict of master fd to master file object.
     slave_names = {}  # Dict of master fd to slave name.
+
+    try:
+        os.mkdir('/tmp/dev')
+    except:
+        pass
     port_num=0
     for _ in range(num_ports):
         master_fd, slave_fd = pty.openpty()
@@ -45,7 +50,7 @@ def run(num_ports, loopback=False, debug=False):
         slave_name = os.ttyname(slave_fd)
         master_files[master_fd] = open(master_fd, 'r+b', buffering=0)
         slave_names[master_fd] = slave_name
-        link_names.append("/tmp/serial_port_%d"%port_num)
+        link_names.append("/tmp/dev/serial_port_%d"%port_num)
         try:
             os.symlink(slave_name, link_names[port_num])
         except:
@@ -84,7 +89,7 @@ def main():
     )
     parser.add_argument('-n ', '--num_ports', type=int, default=2,
                         help='number of ports to create')
-    parser.add_argument('-l', '--loopback', action='store_false',
+    parser.add_argument('-l', '--loopback', action='store_false', default=False,
                         help='echo data back to the sending device too')
     parser.add_argument('-d', '--debug', action='store_true',
                         help='log received data to stderr')
@@ -98,6 +103,7 @@ def main():
     except KeyboardInterrupt:
         for link_name in link_names:
             os.remove(link_name)
+        os.rmdir('/tmp/dev')
 
 
 if __name__ == '__main__':
