@@ -1,0 +1,3 @@
+{
+    "files": ["serial_port_emulator.py","main.qml","SerialPort.py","main.py"]
+}
